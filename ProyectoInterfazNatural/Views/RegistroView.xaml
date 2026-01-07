@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoInterfazNatural.Views.RegistroView"
+             Title="RegistroView">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Text=" Registro" Margin="0,-20,0,20" FontSize="20"/>
+        <Label Text="Nombre:" Grid.Row="1" />
+        <Entry Grid.Row="2" Text="{Binding Username}"></Entry>
+        <Label Text="Contraseña:" Grid.Row="3"/>
+        <Entry Grid.Row="4" Text="{Binding Password}"></Entry>
+        <!-- UseBiometric es una propiedad que nos va a decir si el usuario se registrara con biometria o no -->
+        <CheckBox Grid.Row="5" IsChecked="{Binding UseBiometric}" />
+        <Label Grid.Row="5" Text="Registrarse con huella" VerticalOptions="Center" Margin="30,0,0,0"/>
+        <Button Text="Registro" Command="{Binding RegistrarCommand}" Margin="0,0,0,10" Grid.Row="6"></Button>
+    </Grid>
+  
+</ContentPage>

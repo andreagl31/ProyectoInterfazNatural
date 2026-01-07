@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoInterfazNatural.Views.Buscar"
+             Title="Buscar">
+    <!--Grid principal-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--Grid banner-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <BoxView Color="Black" HeightRequest="2" Grid.ColumnSpan="3" Grid.Row="1" />
+            <Entry Text="{Binding SearchText}"  Placeholder="Buscar por nombre..." WidthRequest="200" HeightRequest="40" Grid.Column="0" HorizontalOptions="Center"></Entry>
+            <Button Text="Buscar" Command="{Binding SearchCommand}" Grid.Column="1" HeightRequest="18" FontSize="12" WidthRequest="70" Margin="5,0,5,0"></Button>
+            <Image Source="red.png" WidthRequest="40" HeightRequest="40" Grid.Column="2" Grid.Row="0" HorizontalOptions="End" Margin="10"/>
+        </Grid>
+        <!--Collection View Libros-->
+            <!--Necesitamos darle un nombre al collectionview ya que el binding que usa cada elemento del collectionview
+                es el dato padre es decir el libro en este caso, por lo que seemorecommand que es un comando del viewmodel y no del libro,
+                no lo vería, por lo tanto tenemos que hacer referencia a el mediante x referece y path-->
+        <CollectionView x:Name="BooksCollectionView" ItemsSource="{Binding Books}" Grid.Row="1" Margin="0,10,0,10">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Border Stroke="#c45a83" StrokeThickness="3"  Padding="0"
+                                WidthRequest="100" HeightRequest="150" Grid.Row="0" Grid.RowSpan="6" Grid.Column="0" Margin="0,0,0,0">
+                                <Image Source="{Binding ImageSource}" Aspect="AspectFill"/>
+                            </Border>
+                            <Label Text="{Binding Ranking ,StringFormat='Puntuación: {0}'}" FontAttributes="Bold" FontSize="16" Grid.Row="6" Grid.Column="0" />
+                            <Label Text="Titulo" Margin="10,0,0,0" FontAttributes="Bold" FontSize="18" Grid.Row="0"  Grid.Column="1"/>
+                            <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" Grid.Row="1" Margin="30,5,20,5" Grid.Column="1"/>
+                            <Label Text="Autor" Margin="10,0,0,0" FontAttributes="Bold" FontSize="18" Grid.Row="2"  Grid.Column="1"/>
+                            <Label Text="{Binding Author}" FontAttributes="Bold" FontSize="16" Margin="30,5,20,5" Grid.Row="3"  Grid.Column="1"/>
+                            <Label Text="Descripión" Margin="10,0,0,0" FontAttributes="Bold" FontSize="18" Grid.Row="4"  Grid.Column="1"/>
+                            <Label Text="{Binding Description}" FontAttributes="Bold" FontSize="16" Grid.Row="5" Margin="30,5,20,20" Grid.Column="1" LineBreakMode="TailTruncation" MaxLines="3"/>
+                            <Button Text="Ver más"  Command="{Binding Source={x:Reference BooksCollectionView}, Path=BindingContext.SeeMoreCommand}" CommandParameter="{Binding .}"  Grid.Row="6" Grid.Column="1" Margin="20,5,10,5" HorizontalOptions="End" FontSize="15" Padding="10" HeightRequest="30"/>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <!--Footer-->
+        <Grid Grid.Row="2" VerticalOptions="End">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <BoxView Color="Black" HeightRequest="2" Grid.ColumnSpan="2" Grid.Row="0" />
+            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="End" Grid.Row="1" >
+                <Image Source="casa.png" WidthRequest="50" HeightRequest="50" Margin="10"/>
+                <Image Source="casa.png" WidthRequest="50" HeightRequest="50" Margin="10">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCasaTapped" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+            </HorizontalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

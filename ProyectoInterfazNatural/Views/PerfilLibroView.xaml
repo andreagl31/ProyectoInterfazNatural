@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoInterfazNatural.Views.PerfilLibroView"
+             Title="PerfilLibroView">
+   
+    <!--Grid principal-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition> <!-- Banner fijo -->
+            <RowDefinition Height="*"></RowDefinition> <!-- Contenido desplazable -->
+            <RowDefinition Height="Auto"></RowDefinition> <!-- Footer fijo -->
+           
+        </Grid.RowDefinitions>
+        <!--Grid banner-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <BoxView Color="Black" HeightRequest="2" Grid.ColumnSpan="2" Grid.Row="1" />
+            <Label Text="{Binding Book.Title}" FontSize="24" FontAttributes="Bold" Grid.Row="0" Margin="10"/>
+            <Image Source="red.png" WidthRequest="40" HeightRequest="40" Grid.Column="1" Grid.Row="0" HorizontalOptions="End" Margin="10"/>
+        </Grid>
+        <!--Detalles libro-->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="12" Spacing="10">
+                <!-- Grid de detalles (imagen + metadatos) -->
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Stroke="#c45a83" StrokeThickness="3" Padding="0" Grid.Column="0" HeightRequest="180" HorizontalOptions="Start">
+                        <Image Source="{Binding Book.ImageSource}" Aspect="AspectFill"  />
+                    </Border>
+                    <StackLayout Grid.Column="1" Spacing="6" VerticalOptions="Start">
+                        <Label Text="Título:" FontAttributes="Bold" />
+                        <Label Text="{Binding Book.Title}" FontSize="16" />
+                        <Label Text="Autor:" FontAttributes="Bold" Margin="0,6,0,0" />
+                        <Label Text="{Binding Book.Author}" FontSize="16" />
+                        <Label Text="Género:" FontAttributes="Bold" Margin="0,6,0,0" />
+                        <Label Text="{Binding Book.Gender}" FontSize="16" />
+                        <Label Text="Ranking:" FontAttributes="Bold" Margin="0,6,0,0" />
+                        <Label Text="{Binding Book.Ranking}" FontSize="16" />
+                    </StackLayout>
+                </Grid>
+
+                <!-- Coloco la etiqueta "Descripción" pegada al bloque anterior (margen pequeño) -->
+                <Label Text="Descripción:" FontAttributes="Bold" FontSize="18" Margin="0,4,0,0"/>
+                <Label Text="{Binding Book.Description}" FontSize="16" LineBreakMode="WordWrap" />
+
+                <!-- Botón añadir -->
+                <Button Text="Añadir a mi biblioteca"
+              HorizontalOptions="Center"
+              Margin="0,6,0,6"
+              Command="{Binding AddToLibraryCommand}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <!--Footer-->
+        <Grid Grid.Row="5" VerticalOptions="End">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <BoxView Color="Black" HeightRequest="2" Grid.ColumnSpan="2" Grid.Row="0" />
+            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="End" Grid.Row="1" >
+                <Image Source="casa.png" WidthRequest="50" HeightRequest="50" Margin="10">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCasaTapped" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image Source="busqueda.png" WidthRequest="50" HeightRequest="50" Margin="10">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBusquedaTapped" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+            </HorizontalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

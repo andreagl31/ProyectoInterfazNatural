@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:camera="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             x:Class="ProyectoInterfazNatural.Views.EscanerView"
+             Title="Escanear ISBN"
+             BackgroundColor="Black">
+    <Grid BackgroundColor="Black">
+        <camera:CameraView
+        x:Name="cameraView"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill" />
+
+        <BoxView BackgroundColor="#80000000" VerticalOptions="Start" HeightRequest="200"/>
+        <BoxView BackgroundColor="#80000000" VerticalOptions="End" HeightRequest="200"/>
+
+        <Border x:Name="ScannerGui"
+            Stroke="Red"
+            StrokeThickness="3"
+            StrokeShape="RoundRectangle 10"
+            WidthRequest="300" 
+            HeightRequest="180"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            BackgroundColor="Transparent"
+            InputTransparent="True">
+
+            <BoxView HeightRequest="2" BackgroundColor="Red" VerticalOptions="Center" WidthRequest="280"/>
+        </Border>
+
+        <Label Text="Coloca el código ISBN dentro del recuadro"
+           TextColor="White"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           TranslationY="120" />
+    </Grid>
+</ContentPage> 
