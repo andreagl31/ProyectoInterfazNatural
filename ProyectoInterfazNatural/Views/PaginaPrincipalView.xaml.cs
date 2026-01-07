@@ -8,9 +8,7 @@ public partial class PaginaPrincipalView : ContentPage
 	PaginaPrincipalViewModel vm;
     User User;
 
-    // Deshabilitar el botón de atrás
-    
-    
+    // Deshabilitar el botón de atrás   
 
     // Prevenir que el usuario use el botón de atrás del sistema (Android), para q no haya lios con la navegación
     protected override bool OnBackButtonPressed()

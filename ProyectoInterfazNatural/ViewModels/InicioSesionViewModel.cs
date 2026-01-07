@@ -31,7 +31,7 @@ namespace ProyectoInterfazNatural.ViewModels
             LoginWithBiometricCommand = new Command(async () => await ExecuteLoginWithBiometric(), () => !_isProcessing);
             LoginWithPasswordCommand = new Command(async () => await ExecuteLoginWithPassword(), () => !_isProcessing);
         }
-
+        //wrapper para ver si estamos procesando ya alguna acción de login
         private async Task ExecuteLoginWithBiometric()
         {
             if (_isProcessing) return;
@@ -64,7 +64,7 @@ namespace ProyectoInterfazNatural.ViewModels
             // Si el login es exitoso, navegar a la página principal
             //De normal nosotros siempre hemos navegado desde nuestro cs del view
             //Pero como queremos que sea una lógica más compacta, al tener dos opciones de navegación
-            //es decir o bien coin contraseña o bien con huella, es mejor controlarlo con commands desde el view
+            //es decir o bien con contraseña o bien con huella, es mejor controlarlo con commands desde el view
             //ya que si no tendrías que poner command(para manejar la lógica de usuarios) y clicked ( para navegar) simultaneamente lo que no es muy correcto
             if (user != null)
             {

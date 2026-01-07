@@ -17,8 +17,7 @@ namespace ProyectoInterfazNatural
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                })
-                .UseMauiCameraView();
+                });
               
             //vamos a registrar el servicio para el id del dispositivo
 #if ANDROID
