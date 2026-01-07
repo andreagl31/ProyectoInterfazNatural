@@ -1,8 +1,8 @@
-﻿
-using Plugin.Fingerprint;
+﻿using Plugin.Fingerprint;
 using Plugin.Fingerprint.Abstractions;
 using ProyectoInterfazNatural.Model;
 using ProyectoInterfazNatural.Services;
+using ProyectoInterfazNatural.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,12 +15,12 @@ using System.Windows.Input;
 namespace ProyectoInterfazNatural.ViewModels
 {
     public class InicioSesionViewModel
-
     {
         public ObservableCollection<User> Users { get; set; }
         public String Username { get; set; }
         public String Password { get; set; }
         private readonly IDeviceService _deviceService;
+        private bool _isProcessing;
         public ICommand LoginWithBiometricCommand { get; }
         public ICommand LoginWithPasswordCommand { get; }
 
@@ -28,10 +28,56 @@ namespace ProyectoInterfazNatural.ViewModels
         {
             _deviceService = deviceService;
             Users = new ObservableCollection<User>();
-            LoginWithBiometricCommand = new Command(async () => await LoginWithBiometric());
-            LoginWithPasswordCommand = new Command(async () => await LoginWithPassword());
-       
+            LoginWithBiometricCommand = new Command(async () => await ExecuteLoginWithBiometric(), () => !_isProcessing);
+            LoginWithPasswordCommand = new Command(async () => await ExecuteLoginWithPassword(), () => !_isProcessing);
         }
+
+        private async Task ExecuteLoginWithBiometric()
+        {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            ((Command)LoginWithBiometricCommand).ChangeCanExecute();
+            
+            var user = await LoginWithBiometric();
+            
+            // Si el login es exitoso, navegar a la página principal
+            if (user != null)
+            {
+                Application.Current.MainPage = new NavigationPage(new PaginaPrincipalView(user))
+                {
+                    BarBackgroundColor = Colors.Transparent
+                };
+            }
+            
+            _isProcessing = false;
+            ((Command)LoginWithBiometricCommand).ChangeCanExecute();
+        }
+
+        private async Task ExecuteLoginWithPassword()
+        {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            ((Command)LoginWithPasswordCommand).ChangeCanExecute();
+            
+            var user = await LoginWithPassword();
+            
+            // Si el login es exitoso, navegar a la página principal
+            //De normal nosotros siempre hemos navegado desde nuestro cs del view
+            //Pero como queremos que sea una lógica más compacta, al tener dos opciones de navegación
+            //es decir o bien coin contraseña o bien con huella, es mejor controlarlo con commands desde el view
+            //ya que si no tendrías que poner command(para manejar la lógica de usuarios) y clicked ( para navegar) simultaneamente lo que no es muy correcto
+            if (user != null)
+            {
+                Application.Current.MainPage = new NavigationPage(new PaginaPrincipalView(user))
+                {
+                    BarBackgroundColor = Colors.Transparent
+                };
+            }
+            
+            _isProcessing = false;
+            ((Command)LoginWithPasswordCommand).ChangeCanExecute();
+        }
+
         //task pk es una función asincrona, tiene que ser asicrona por el uso de huella
         public async Task<User> LoginWithBiometric()
         {
@@ -92,11 +138,10 @@ namespace ProyectoInterfazNatural.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "Usuario no encontrado",
-                    "Este usuario no existe, por favor regístrate",
+                    "Este usuario no existe,o la contraseña es incorrecta por favor regístrate",
                     "OK"
                 );
                 return null;
-
             }
             //ahora verificamos contraseña
             if (Password != user.Password)
@@ -107,7 +152,7 @@ namespace ProyectoInterfazNatural.ViewModels
 
             // ahora una vez que iniciamos sesión preguntaremos si quiera activar la biometria si no esta activada
             string deviceId = _deviceService.GetDeviceId();
-            if (!user.IsBiometricEnabled || !user.DevicesWithBiometrics.Contains(deviceId))
+            if (!user.IsBiometricEnabled)
             {
                 bool activarBiometria = await Application.Current.MainPage.DisplayAlert(
                     "Huella", "¿Deseas activar inicio con huella en este dispositivo?", "Sí", "No"
@@ -116,8 +161,30 @@ namespace ProyectoInterfazNatural.ViewModels
                 if (activarBiometria)
                 {
                     user.IsBiometricEnabled = true;
-                    user.DevicesWithBiometrics.Add(deviceId);
-                }//añadimos el dispositivo a la lista de dispositios en donde hemos iniciado sesion y ponemos la biometria como que si
+                    // Solo añadir el dispositivo si no está ya en la lista
+                    if (!user.DevicesWithBiometrics.Contains(deviceId))
+                    {
+                        user.DevicesWithBiometrics.Add(deviceId);
+                    }
+                }
+            }
+            else
+            {
+                // Si la biometría ya está activada pero este dispositivo no está registrado
+                if (!user.DevicesWithBiometrics.Contains(deviceId))
+                {
+                    bool activarEnEsteDispositivo = await Application.Current.MainPage.DisplayAlert(
+                        "Huella", 
+                        "¿Deseas activar inicio con huella en este dispositivo?", 
+                        "Sí", 
+                        "No"
+                    );
+
+                    if (activarEnEsteDispositivo)
+                    {
+                        user.DevicesWithBiometrics.Add(deviceId);
+                    }
+                }
             }
 
             //Login exitoso

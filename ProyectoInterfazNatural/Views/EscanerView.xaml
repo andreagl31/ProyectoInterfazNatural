@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
+<!--ESTA VISTA FUE UNA VISTA DE PRUEBA PARA AÑADIR UN ESCANER PERO FALLIDA-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:camera="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"

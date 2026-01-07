@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"            
              x:Class="ProyectoInterfazNatural.Views.InicioSesionView"    
              BackgroundColor="#fff6f9">
     <Grid Margin="20">
@@ -18,12 +18,9 @@
         <Label Text="Nombre:" Grid.Row="1" />
         <Entry Grid.Row="2" Text="{Binding Username}"></Entry>
         <Label Text="Contraseña:" Grid.Row="3" />
-        <Entry Grid.Row="4" Text="{Binding Password}"></Entry>
-        <Button Text="Iniciar sesión con huella" Grid.Row="5" Margin="0,20,0,10" Command="{Binding LoginWithBiometricCommand}" Clicked="Button_Clicked_2"></Button>
-        <Button Text="Iniciar sesión con contraseña" Margin="0,0,0,10" Grid.Row="6" Command="{Binding LoginWithPasswordCommand}" Clicked="Button_Clicked_1"></Button>
+        <Entry Grid.Row="4" Text="{Binding Password}" IsPassword="True"></Entry>
+        <Button Text="Iniciar sesión con huella" Grid.Row="5" Margin="0,20,0,10" Command="{Binding LoginWithBiometricCommand}"></Button>
+        <Button Text="Iniciar sesión con contraseña" Margin="0,0,0,10" Grid.Row="6" Command="{Binding LoginWithPasswordCommand}"></Button>
         <Button VerticalOptions="Start" Clicked="Button_Clicked" Text="¿No tienes usuario?,registrate" Margin="0,00,0,10" Grid.Row="7" HeightRequest="20" />
-        
-
     </Grid>
-
 </ContentPage>

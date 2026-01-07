@@ -14,8 +14,9 @@ namespace ProyectoInterfazNatural.ViewModels
 {
     public class RegistroViewModel
     {
-        private ObservableCollection<User> _users;
+        private ObservableCollection<User> users;
         private readonly IDeviceService _deviceService;
+        private bool _isProcessing;
         public string Username { get; set; }
         public string Password { get; set; }
         public bool UseBiometric { get; set; }
@@ -23,42 +24,73 @@ namespace ProyectoInterfazNatural.ViewModels
 
         public RegistroViewModel(InicioSesionViewModel vm, IDeviceService deviceService)
         {
-            _users = vm.Users;
+            users = vm.Users;
             _deviceService = deviceService;
             //UseBiometric va a guardar un booleano si el usuario se quiere identificar con huella, o bien entrar con contraseña
             //La huella vive en el sistema operativo, así que antes tiene que estar registrada en el sistema operativo para poder
             //usarse, la huella determina el dueño del teléfono, pero la primera vez que te registres es cuando tienes que definir la contraseña
-            RegistrarCommand = new Command(async () =>
+            RegistrarCommand = new Command(async () => await ExecuteRegistrar(), () => !_isProcessing);
+        }
+
+        private async Task ExecuteRegistrar()
+        {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            ((Command)RegistrarCommand).ChangeCanExecute();
+
+            //Antes que nada tenemos que verificar si el usuario ya existe:
+            var usuarioExistente = users
+            .FirstOrDefault(u => u.Username.Equals(Username, StringComparison.OrdinalIgnoreCase));
+
+            if (usuarioExistente != null)
             {
-                string deviceId = null;
-                if (UseBiometric)
-                {
+                await Application.Current.MainPage.DisplayAlert(
+                    "Usuario existente",
+                    "Ya existe un usuario con ese nombre",
+                    "OK"
+                );
+                _isProcessing = false;
+                ((Command)RegistrarCommand).ChangeCanExecute();
+                return;
+            }
 
-                    deviceId = _deviceService.GetDeviceId();
-                }
-                var nuevoUsuario = new User
-                //este constructor usa los setters
-                {
-                    Username = Username,
-                    Password = Password,
-                    IsBiometricEnabled = UseBiometric,
-                    myBooks = new List<Book>(),
-                    DevicesWithBiometrics = UseBiometric && deviceId != null
-                    ? new List<string> { deviceId }
-                    : new List<string>()
-                    //si esta activado guardo en los dispodsitivos este dispositivo
-                };
-                _users.Add(nuevoUsuario);
-                //para nistrar uin mensakje
-                await Application.Current.MainPage.DisplayAlert("Registro exitoso",
-                                                                $"Usuario {Username} creado",
-                                                                "OK");
-                // Limpiamos campos
-                Username = string.Empty;
-                Password = string.Empty;
-                UseBiometric = false;
-            });
+            string deviceId = null;
+            if (UseBiometric)
+            {
 
+                deviceId = _deviceService.GetDeviceId();
+            }
+            var nuevoUsuario = new User
+            //este constructor usa los setters
+            {
+                Username = Username,
+                Password = Password,
+                IsBiometricEnabled = UseBiometric,
+                myBooks = new List<Book>(),
+                DevicesWithBiometrics = UseBiometric && deviceId != null
+                ? new List<string> { deviceId }
+                : new List<string>()
+                //si esta activado guardo en los dispodsitivos este dispositivo
+            };
+            users.Add(nuevoUsuario);
+            //para mostrar un mensaje
+            await Application.Current.MainPage.DisplayAlert("Registro exitoso",
+                                                            $"Usuario {Username} creado",
+                                                            "OK");
+            // Limpiamos campos
+            Username = string.Empty;
+            Password = string.Empty;
+            UseBiometric = false;
+
+            // Volver automáticamente al inicio de sesión después del registro exitoso, para evitar sobrepuestos
+            var navigationPage = Application.Current.MainPage as NavigationPage;
+            if (navigationPage?.Navigation?.NavigationStack?.Count > 1)
+            {
+                await navigationPage.Navigation.PopAsync();
+            }
+
+            _isProcessing = false;
+            ((Command)RegistrarCommand).ChangeCanExecute();
         }
     }
 }

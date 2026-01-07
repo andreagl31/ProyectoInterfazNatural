@@ -16,26 +16,20 @@ public partial class InicioSesionView : ContentPage
 		vm= new InicioSesionViewModel(deviceService);
 		BindingContext = vm;
 		
-		
+		// Deshabilitar el botón de atrás
+		NavigationPage.SetHasBackButton(this, false);
 	}
 
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-		 Navigation.PushAsync(new RegistroView(vm));
-    }
+	// Prevenir que el usuario use el botón de atrás del sistema (Android)
+	protected override bool OnBackButtonPressed()
+	{
+		// Retornar true para consumir el evento y evitar que haga algo
+		return true;
+	}
 
-    private async void Button_Clicked_1(object sender, EventArgs e)
+    private async void Button_Clicked(object sender, EventArgs e)
     {
-		var user= await vm.LoginWithPassword();
-        if (user != null)
-            await Navigation.PushAsync(new PaginaPrincipalView(user));
-    }
-
-    private async void Button_Clicked_2(object sender, EventArgs e)
-    {
-		var user= await vm.LoginWithBiometric();
-		if (user != null)
-			await Navigation.PushAsync(new PaginaPrincipalView(user));
-
+		// Navegar a registro de forma normal
+		await Navigation.PushAsync(new RegistroView(vm));
     }
 }

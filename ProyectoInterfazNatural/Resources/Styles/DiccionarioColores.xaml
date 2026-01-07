@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Colores de la app -->
+    <Color x:Key="HeaderFooterColor">#c45a83</Color>
+    <Color x:Key="Background">#fff6f9</Color>
+    <Color x:Key="FooterHeaderTextColor">White</Color>
+    
+    <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
+    </Style>
+    <Style TargetType="Grid" x:Key="HeaderFooterStyle" >
+        <Setter Property="BackgroundColor" Value="{StaticResource HeaderFooterColor}" />
+        
+    </Style>
+    <Style TargetType="Label" x:Key="HeaderLabelStyle">
+        <Setter Property="TextColor" Value="{StaticResource FooterHeaderTextColor}" />
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+</ResourceDictionary>
